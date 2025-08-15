@@ -7,6 +7,13 @@ contract Boolean{
 
     function setMyBool(bool _myBool) public {
         myBool = _myBool;
+        //_myBoolではない方を代入
+        myBool = !_myBool;
+        //各種論理演算の結果を代入
+        myBool = true && _myBool;
+        myBool = true || _myBool;
+        myBool = true == _myBool;
+        myBool = true != _myBool;
     }
 
 }
