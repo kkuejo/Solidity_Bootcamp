@@ -82,9 +82,10 @@ jspm_packages/
 # Solidity coverage
 coverage.json
 
-# Deployment artifacts
+# Deployment artifacts and state folders
 .deploys/
 .states/
+.state/
 .deps/
 
 # Specific contract files
