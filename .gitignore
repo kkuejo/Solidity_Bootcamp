@@ -101,3 +101,6 @@ scripts/web3-lib.ts
 
 # Test files
 tests/storage.test.js
+
+# State and configuration files
+state.json
