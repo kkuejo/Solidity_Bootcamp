@@ -45,7 +45,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Boolean.sol": "Boolean"
+			"contracts/001_Boolean.sol": "Boolean"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -59,7 +59,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/Boolean.sol": {
+		"contracts/001_Boolean.sol": {
 			"keccak256": "0xaa07da17d6960631f272123945a1c805f03d3309e4f3476e746d97a331017df6",
 			"license": "UNLICENSED",
 			"urls": [
