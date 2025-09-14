@@ -26,12 +26,12 @@ contract CoffeeToken is ERC20, AccessControl {
     //ERC20のconstructor(string memory name, string memory symbol)は、nameとsymbolを設定する。
     //親constructerの設定が必要な場合は必ず呼び出す必要がある。
     //ERC20("CoffeeToken", "MTK")の親constructerを呼び出したあとに、CoffeeTokenのconstructorを実行する。
-    constructor(address defaultAdmin, address minter) ERC20("CoffeeToken", "MTK") {
+    constructor() ERC20("CoffeeToken", "MTK") {
         //defaultAdminアドレスにDEFAULT_ADMIN_ROLEの権限を付与する。
         //minterロールの付与や剥奪などができる。
-        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         //minterアドレスにMINTER_ROLEの権限を付与する。
-        _grantRole(MINTER_ROLE, minter);
+        _grantRole(MINTER_ROLE, msg.sender);
     }
 
     //onlyRole(MINTER_ROLE)は、Modifierで、MINTER_ROLEの権限を持つアドレスのみが関数を実行できるようにする。

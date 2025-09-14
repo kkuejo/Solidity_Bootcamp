@@ -3,6 +3,11 @@ pragma solidity ^0.8.30;
  
  //ERC20トークンの規格は、https://ethereum.org/ja/developers/docs/standards/tokens/erc-20/ で確認可能。
 
+//AがSampleTokenをデプロイし、BにCoffeeTokenを1000枚ミントした。
+//Bは、TokenSaleコントラクトをデプロイし、その際にSampleTokenのコントラクトアドレスを_tokenに渡している。
+//Bは、SampleTokenのApprove機能で、TokenSaleコントラクトに対し、1000枚の利用許可を与える。
+//Cが、SampleTokenのpurchase機能で、1ETHを支払うと、1枚のCoffeeTokenを購入することができる。
+
 //abstract contactは、デプロイされるコントラクトの型の定義としてのみ機能し、実際にデプロイされるのはTokenSaleコントラクトのみである。
 abstract contract ERC20{
     function transferFrom(address _from, address _to, uint256 _value) public virtual returns (bool success);
