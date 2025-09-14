@@ -38,7 +38,7 @@ contract CoffeeToken is ERC20, AccessControl {
     //onlyRole()は、AccessControlから継承し、_mint()はERC20から継承している。
     function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
         //mint()は、ERC20から継承している。これにより、toのCoffeeTokenの残高をamount増やすことができる。
-        _mint(to, amount);
+        _mint(to, amount * 10 ** decimals());
     }
 
     //buyOneCoffee()は、自分の保有するCoffeeTokenを消費して、Coffeeを1つ購入する。
@@ -46,7 +46,7 @@ contract CoffeeToken is ERC20, AccessControl {
         //_msgSender()がCoffeeを受け取る人(購入する人)のアドレスを返す。
         //_msgSender()は、ERC20にも、AccessControlにもどちらにも記載があるが、実際には先に継承されているERC20から返される。しかし、両方の実装が同じであるため問題にならない。
         //_burn()は、ERC20から継承している。これにより、CoffeeTokenの残高を1減らすことができる。
-        _burn(_msgSender(), 1);
+        _burn(_msgSender(), 1 * 10 ** decimals());
         emit CoffeePurchased(_msgSender(), _msgSender());
     }
 
@@ -55,7 +55,7 @@ contract CoffeeToken is ERC20, AccessControl {
         //_SpendAllowanceは、ERC20から継承している。これにより、accountの保有するCoffeeTokenを_msgSenderが1つ消費することができる。
         //_spendAllowanceは、accountが_msgSenderに利用を許可しているToken数を確認し、その数が1以上であることを確認する。
         //ERC20を継承しているので、approve関数が利用可能で、他の人に、CoffeeTokenの利用を許可することができる。
-        _spendAllowance(account, _msgSender(), 1);
+        _spendAllowance(account, _msgSender(), 1 * 10 ** decimals());
         _burn(account, 1);
         emit CoffeePurchased(_msgSender(), account);
     }
