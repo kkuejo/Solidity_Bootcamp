@@ -104,24 +104,61 @@ module.exports = async function(callback) {
 npx truffle exec interact.js --network ganache
 ```
 
-## NFTのミント（Mint）
+## NFTのミント（Mint）と詳細確認
 
-オーナーアカウントからNFTをミントする：
+### NFTをミントする
+
+Truffle Console内で以下のコマンドを実行：
 
 ```javascript
-// Truffle Console内で実行
+// コントラクトのインスタンスとアカウントを取得
 let spacebear = await Spacebear.deployed()
-let accounts = await web3.eth.getAccounts()
+const accounts = await web3.eth.getAccounts()
 
-// NFTをミント（toアドレス、tokenURIを指定）
-let result = await spacebear.safeMint(accounts[1], "spacebear_1.json")
+// NFTをミント（accounts[1]にspacebear_1.jsonをミント）
+// 注意: safeMintはオーナー（accounts[0]）のみが実行可能
+await spacebear.safeMint(accounts[1], "spacebear_1.json")
 
-// トランザクションレシートを確認
-result.tx  // トランザクションハッシュ
-result.logs  // イベントログ
+// 返り値にはトランザクション情報が含まれます
+// トランザクションハッシュやイベントログを確認できます
+```
 
-// トークンURIを確認（tokenId: 0）
+### ミントされたNFTの詳細を確認
+
+```javascript
+// NFTの所有者を確認（tokenId: 0の所有者を取得）
+await spacebear.ownerOf(0)
+// → accounts[1]のアドレスが返される
+
+// NFTのメタデータURIを確認
 await spacebear.tokenURI(0)
+// → "https://ethereum-blockchain-developer.com/2022-06-nft-truffle-hardhat-foundry/nftdata/spacebear_1.json"が返される
+
+// 複数のNFTをミントした場合の例
+await spacebear.safeMint(accounts[2], "spacebear_2.json")  // tokenId: 1
+await spacebear.safeMint(accounts[3], "spacebear_3.json")  // tokenId: 2
+
+// それぞれのNFTの所有者を確認
+await spacebear.ownerOf(1)  // → accounts[2]
+await spacebear.ownerOf(2)  // → accounts[3]
+
+// それぞれのトークンURIを確認
+await spacebear.tokenURI(1)  // → ベースURI + "spacebear_2.json"
+await spacebear.tokenURI(2)  // → ベースURI + "spacebear_3.json"
+```
+
+### その他の便利なコマンド
+
+```javascript
+// 特定アドレスが所有するNFTの数を確認
+await spacebear.balanceOf(accounts[1])
+
+// NFTの転送（accounts[1]からaccounts[2]へtokenId:0を転送）
+// 注意: 転送はトークンの所有者のみが実行可能
+await spacebear.transferFrom(accounts[1], accounts[2], 0, {from: accounts[1]})
+
+// 転送後の所有者を確認
+await spacebear.ownerOf(0)  // → accounts[2]
 ```
 
 ## プロジェクト構成

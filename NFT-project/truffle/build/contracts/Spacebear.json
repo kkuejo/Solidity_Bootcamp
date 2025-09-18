@@ -13963,10 +13963,16 @@
       "links": {},
       "address": "0x32a2Cd4caDEd5D8a9dCd2E0Cd004D0aEe2d75d35",
       "transactionHash": "0x72776d477f779b796a00a12b278a2bb1682024a6af8c03f0c48df1845a00c433"
+    },
+    "1758168484704": {
+      "events": {},
+      "links": {},
+      "address": "0x674240e69430ba29D4829f1Db51107b1b24D2B7D",
+      "transactionHash": "0xf7e910bf47d008e1520cfbb87e90b07d67f7c755e726d2bbc634172bd16a89e7"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-09-18T03:38:01.481Z",
+  "updatedAt": "2025-09-18T04:08:18.207Z",
   "networkType": "ethereum",
   "devdoc": {
     "errors": {
@@ -14105,7 +14111,6 @@
       },
       "transferFrom(address,address,uint256)": {
         "details": "See {IERC721-transferFrom}."
-
       },
       "transferOwnership(address)": {
         "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
