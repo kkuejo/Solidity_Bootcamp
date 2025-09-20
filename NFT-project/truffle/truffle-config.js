@@ -8,26 +8,6 @@
  *
  * https://trufflesuite.com/docs/truffle/reference/configuration
  *
- * Hands-off deployment with Infura
- * --------------------------------
- *
- * Do you have a complex application that requires lots of transactions to deploy?
- * Use this approach to make deployment a breeze 🏖️:
- *
- * Infura deployment needs a wallet provider (like @truffle/hdwallet-provider)
- * to sign transactions before they're sent to a remote public node.
- * Infura accounts are available for free at 🔍: https://infura.io/register
- *
- * You'll need a mnemonic - the twelve word phrase the wallet uses to generate
- * public/private key pairs. You can store your secrets 🤐 in a .env file.
- * In your project root, run `$ npm install dotenv`.
- * Create .env (which should be .gitignored) and declare your MNEMONIC
- * and Infura PROJECT_ID variables inside.
- * For example, your .env file will have the following structure:
- *
- * MNEMONIC = <Your 12 phrase mnemonic>
- * PROJECT_ID = <Your Infura project id>
- *
  * Deployment with Truffle Dashboard (Recommended for best security practice)
  * --------------------------------------------------------------------------
  *
@@ -41,10 +21,12 @@
  * https://trufflesuite.com/docs/truffle/getting-started/using-the-truffle-dashboard/
  */
 
-// require('dotenv').config();
-// const { MNEMONIC, PROJECT_ID } = process.env;
+require('dotenv').config();
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+// Load environment variables
+const mnemonic = process.env.MNEMONIC;
+const infuraProjectId = process.env.INFURA_PROJECT_ID;
 
 module.exports = {
   /**
@@ -67,45 +49,48 @@ module.exports = {
       host: "127.0.0.1",
       port: 8545,
       network_id: "*",
+    },
+
+    // Truffle Dashboard - RECOMMENDED METHOD
+    // This uses MetaMask for signing transactions, no mnemonic needed in config
+    dashboard: {
+      host: "localhost",
+      port: 24012,
+      network_id: "*"      // Match any network id
+    },
+
+    // Sepolia with Infura
+    sepolia: {
+      provider: function() {
+        return new HDWalletProvider({
+          mnemonic: {
+            phrase: mnemonic
+          },
+          providerOrUrl: `https://sepolia.infura.io/v3/${infuraProjectId}`,
+          numberOfAddresses: 1,
+          shareNonce: true,
+          derivationPath: "m/44'/60'/0'/0/",
+          chainId: 11155111,
+          pollingInterval: 15000,  // 15 seconds - balanced interval
+          timeout: 120000,         // 120 seconds timeout
+          keepAlive: false,
+          websockets: false
+        });
+      },
+      network_id: 11155111,      // Sepolia's network id
+      gas: 5000000,              // Gas limit
+      gasPrice: 20000000000,     // 20 gwei
+      confirmations: 2,          // # of confirmations to wait between deployments
+      timeoutBlocks: 200,        // # of blocks before a deployment times out
+      skipDryRun: true,          // Skip dry run before migrations
+      networkCheckTimeout: 999999,
+      deploymentPollingInterval: 15000
     }
-    //
-    // development: {
-    //  host: "127.0.0.1",     // Localhost (default: none)
-    //  port: 8545,            // Standard Ethereum port (default: none)
-    //  network_id: "*",       // Any network (default: none)
-    // },
-    //
-    // An additional network, but with some advanced options…
-    // advanced: {
-    //   port: 8777,             // Custom port
-    //   network_id: 1342,       // Custom network
-    //   gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
-    //   gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
-    //   from: <address>,        // Account to send transactions from (default: accounts[0])
-    //   websocket: true         // Enable EventEmitter interface for web3 (default: false)
-    // },
-    //
-    // Useful for deploying to a public network.
-    // Note: It's important to wrap the provider as a function to ensure truffle uses a new provider every time.
-    // goerli: {
-    //   provider: () => new HDWalletProvider(MNEMONIC, `https://goerli.infura.io/v3/${PROJECT_ID}`),
-    //   network_id: 5,       // Goerli's id
-    //   confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
-    //   timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-    //   skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
-    // },
-    //
-    // Useful for private networks
-    // private: {
-    //   provider: () => new HDWalletProvider(MNEMONIC, `https://network.io`),
-    //   network_id: 2111,   // This network is yours, in the cloud.
-    //   production: true    // Treats this network as if it was a public net. (default: false)
-    // }
   },
 
   // Set default mocha options here, use special reporters, etc.
   mocha: {
-    // timeout: 100000
+    timeout: 100000
   },
 
   // Configure your compilers
