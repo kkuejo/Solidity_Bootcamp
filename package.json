@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/kkuejo/Solidity_Bootcamp#readme",
   "dependencies": {
-    "@openzeppelin/contracts": "^5.4.0"
+    "@openzeppelin/contracts": "^5.4.0",
+    "viem": "^2.38.4"
   }
 }
