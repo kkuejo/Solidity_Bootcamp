@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "balance": "tsx src/balance.ts",
-    "send": "tsx src/send-transaction.ts",
-    "index": "tsx src/index.ts"
+    "compile": "cd foundry && forge build && cd ..",
+    "deploy:foundry": "cd foundry && forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast && cd ..",
+    "deploy:ts": "tsx src/deploy.ts",
+    "interact": "tsx src/contract-interaction.ts",
+    "selector": "tsx src/function-selector.ts",
+    "with-abi": "tsx src/with-abi-file.ts"
   },
   "keywords": [],
   "author": "",
