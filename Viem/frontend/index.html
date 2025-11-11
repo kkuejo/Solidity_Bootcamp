@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viem + Foundry Demo (TypeScript)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔷 Viem + Foundry Demo (TypeScript)</h1>
+    <p>Open the Developer Console (F12) and try the commands below!</p>
+    
+    <h2>Example Commands:</h2>
+    <pre><code>// Read myUint value
+await readMyUint()
+
+// Update myUint value
+await updateMyUint(50)
+
+// Read again to see the change
+await readMyUint()
+
+// Get all accounts
+await getAccounts()</code></pre>
+
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
