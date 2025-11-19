@@ -15,3 +15,8 @@
     ]
 
 3. " foundry.
+
+
+4. Anvilにデプロイ
+cd contracts
+forge script script/Deploy.s.sol --rpc-url http://localhost:8545 --broadcast

@@ -30,7 +30,7 @@ contract ItemManager is Ownable {
         public
         onlyOwner
     {
-        Item item = new Item(this, _priceInWei, itemIndex);
+        Item item = new Item(address(this), _priceInWei, itemIndex);
         items[itemIndex].item = item;
         items[itemIndex].step = SupplyChainSteps.Created;
         items[itemIndex].identifier = _identifier;
