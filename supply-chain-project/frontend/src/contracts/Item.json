@@ -1,19 +1,83 @@
-
-╭-------------+-------------------------------------------------+------------╮
-| Type        | Signature                                       | Selector   |
-+============================================================================+
-| function    | index() view returns (uint256)                  | 0x2986c0e5 |
-|-------------+-------------------------------------------------+------------|
-| function    | paidWei() view returns (uint256)                | 0x83d12eef |
-|-------------+-------------------------------------------------+------------|
-| function    | parentContract() view returns (address)         | 0x230b9da3 |
-|-------------+-------------------------------------------------+------------|
-| function    | priceInWei() view returns (uint256)             | 0x3c8da588 |
-|-------------+-------------------------------------------------+------------|
-| constructor | constructor(address,uint256,uint256) nonpayable |            |
-|-------------+-------------------------------------------------+------------|
-| fallback    | fallback() nonpayable                           |            |
-|-------------+-------------------------------------------------+------------|
-| receive     | receive() payable                               |            |
-╰-------------+-------------------------------------------------+------------╯
-
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "_parentContract",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_priceInWei",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_index",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "index",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "paidWei",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "parentContract",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "priceInWei",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "fallback",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "receive",
+    "stateMutability": "payable"
+  }
+]

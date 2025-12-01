@@ -36,12 +36,13 @@ function ItemCard({ index }: { index: number }) {
       padding: '15px',
       margin: '10px 0',
       borderRadius: '8px',
-      backgroundColor: step === 1 ? '#e8f5e9' : step === 2 ? '#e3f2fd' : '#fff'
+      backgroundColor: step === 1 ? '#e8f5e9' : step === 2 ? '#e3f2fd' : '#fff',
+      color: '#000'
     }}>
-      <h3>Item #{index}: {identifier}</h3>
-      <p><strong>Contract Address:</strong> {itemAddress}</p>
-      <p><strong>Price:</strong> {priceInWei ? `${priceInWei.toString()} Wei (${formatEther(priceInWei)} ETH)` : 'Loading...'}</p>
-      <p><strong>Status:</strong> <span style={{
+      <h3 style={{ color: '#000' }}>Item #{index}: {identifier}</h3>
+      <p style={{ color: '#000' }}><strong>Contract Address:</strong> {itemAddress}</p>
+      <p style={{ color: '#000' }}><strong>Price:</strong> {priceInWei ? `${priceInWei.toString()} Wei (${formatEther(priceInWei)} ETH)` : 'Loading...'}</p>
+      <p style={{ color: '#000' }}><strong>Status:</strong> <span style={{
         fontWeight: 'bold',
         color: step === 1 ? '#2e7d32' : step === 2 ? '#1565c0' : '#666'
       }}>{step !== undefined ? statusNames[step] : 'Unknown'}</span></p>

@@ -10,7 +10,6 @@ function App() {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <div className="App">
-          <h1>Supply Chain Example</h1>
           <SupplyChain />
         </div>
       </QueryClientProvider>
