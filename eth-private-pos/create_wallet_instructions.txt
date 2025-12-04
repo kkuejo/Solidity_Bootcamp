@@ -1,0 +1,22 @@
+ウォレット作成手順:
+
+1. 以下のコマンドを実行:
+   ./prysm.sh validator wallet create \
+     --wallet-dir consensus/validator_keys \
+     --keymanager-kind imported \
+     --accept-terms-of-use
+
+2. パスワードを2回入力（例: password123）
+
+3. ウォレット作成後、設定したパスワードを wallet-password.txt に保存:
+   echo "your-password" > wallet-password.txt
+   chmod 600 wallet-password.txt
+
+4. バリデータを起動:
+   ./prysm.sh validator \
+     --datadir consensus/validator-data \
+     --accept-terms-of-use \
+     --chain-config-file consensus/config.yaml \
+     --wallet-dir consensus/validator_keys \
+     --wallet-password-file wallet-password.txt \
+     --beacon-rpc-provider localhost:4000
