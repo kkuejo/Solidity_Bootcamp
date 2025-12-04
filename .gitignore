@@ -107,3 +107,8 @@ tests/storage.test.js
 state.json
 .states/**/state.json
 .states/*/state.json
+
+# Large binary files for private PoS network
+eth-private-pos/dist/beacon-chain-v7.0.0-linux-amd64
+eth-private-pos/dist/validator-v7.0.0-linux-amd64
+eth-private-pos/prysmctl
