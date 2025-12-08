@@ -12,8 +12,8 @@
 		"berlinBlock": 0,
 		"londonBlock": 0,
 		"mergeNetsplitBlock": 0,
-		"shanghaiTime": 1764830928,
-		"cancunTime": 1764830928,
+		"shanghaiTime": 1765233555,
+		"cancunTime": 1765233555,
 		"terminalTotalDifficulty": 0,
 		"depositContractAddress": "0x0000000000000000000000000000000000000000",
 		"blobSchedule": {
@@ -25,7 +25,7 @@
 		}
 	},
 	"nonce": "0x0",
-	"timestamp": "0x69312ed0",
+	"timestamp": "0x69375393",
 	"extraData": "0x",
 	"gasLimit": "0x8000000",
 	"difficulty": "0x1",
