@@ -1,0 +1,20 @@
+# Log files
+*.log
+
+# Geth data directories
+execution/data/
+execution/mychaindata/
+
+# Beacon chain data
+consensus/beacon-data/
+
+# Validator data
+consensus/validator-data/
+
+# Binary files
+beacon-chain
+validator
+prysmctl
+
+# JWT secret
+jwt.hex
