@@ -3,7 +3,8 @@ pragma solidity ^0.8.27;
 
 import {Script, console} from "forge-std/Script.sol";
 import {MyToken} from "../src/MyToken.sol";
-// import {MyTokenSale} from "../src/MyTokenSale.sol";
+import {MyTokenSale} from "../src/MyTokenSale.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 // import {KycContract} from "../src/KycContract.sol";
 
 contract DeployScript is Script {
@@ -22,10 +23,8 @@ contract DeployScript is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // MyTokenをデプロイ
-        // recipient: トークンを受け取るアドレス（デプロイヤー）
-        // initialOwner: コントラクトのオーナー（デプロイヤー）
-        // initialSupply: 初期供給量
-        MyToken token = new MyToken(deployer, deployer, initialTokens);
+        // initialSupply: 初期供給量（デプロイヤーに mint される）
+        MyToken token = new MyToken(initialTokens);
 
         console.log("\n=== MyToken Deployed ===");
         console.log("Contract address:", address(token));
@@ -33,32 +32,37 @@ contract DeployScript is Script {
         console.log("Token symbol:", token.symbol());
         console.log("Decimals:", token.decimals());
         console.log("Total supply:", token.totalSupply());
-        console.log("Owner:", token.owner());
-        console.log("Recipient balance:", token.balanceOf(deployer));
+        console.log("Deployer balance:", token.balanceOf(deployer));
 
-        // 将来の拡張用: 他のコントラクトのデプロイ
-        // KycContract kycContract = new KycContract();
-        // console.log("KycContract deployed at:", address(kycContract));
+        // MyTokenSaleをデプロイ
+        // rate: 1 wei = 1 token
+        // wallet: デプロイヤーのアドレス（ETHを受け取る）
+        // token: MyTokenのアドレス
+        MyTokenSale tokenSale = new MyTokenSale(
+            1,  // rate: 1 wei = 1 token
+            payable(deployer),  // wallet address
+            IERC20(address(token))
+        );
 
-        // MyTokenSale tokenSale = new MyTokenSale(
-        //     1,  // rate
-        //     deployer,  // wallet address
-        //     address(token),
-        //     address(kycContract)
-        // );
-        // console.log("MyTokenSale deployed at:", address(tokenSale));
+        console.log("\n=== MyTokenSale Deployed ===");
+        console.log("Contract address:", address(tokenSale));
+        console.log("Rate:", tokenSale.rate());
+        console.log("Wallet:", tokenSale.wallet());
+        console.log("Token:", address(tokenSale.token()));
 
         // トークンをTokenSaleコントラクトへ転送
-        // token.transfer(address(tokenSale), initialTokens);
-        // console.log("Transferred", initialTokens, "tokens to TokenSale contract");
+        token.transfer(address(tokenSale), initialTokens);
+        console.log("\n=== Token Transfer ===");
+        console.log("Transferred", initialTokens, "tokens to TokenSale contract");
+        console.log("TokenSale balance:", token.balanceOf(address(tokenSale)));
+        console.log("Deployer balance:", token.balanceOf(deployer));
 
         vm.stopBroadcast();
 
         // デプロイ情報のまとめ
         console.log("\n=== Deployment Summary ===");
         console.log("MyToken:", address(token));
-        // console.log("KycContract:", address(kycContract));
-        // console.log("MyTokenSale:", address(tokenSale));
+        console.log("MyTokenSale:", address(tokenSale));
         console.log("========================");
     }
 }
