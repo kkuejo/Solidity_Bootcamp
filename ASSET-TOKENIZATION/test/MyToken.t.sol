@@ -16,7 +16,7 @@ contract MyTokenTest is Test {
     // テスト前に毎回実行される
     function setUp() public {
         owner = address(this);
-        token = new MyToken(owner, owner, INITIAL_SUPPLY);
+        token = new MyToken(INITIAL_SUPPLY);
     }
 
     function testInitialSupply() public view {
