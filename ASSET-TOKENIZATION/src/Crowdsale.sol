@@ -54,7 +54,7 @@ contract Crowdsale is Context, ReentrancyGuard {
      * @param wallet_ Address where collected funds will be forwarded to
      * @param token_ Address of the token being sold
      */
-    constructor (uint256 rate_, address payable wallet_, IERC20 token_) {
+    constructor(uint256 rate_, address payable wallet_, IERC20 token_) {
         require(rate_ > 0, "Crowdsale: rate is 0");
         require(wallet_ != address(0), "Crowdsale: wallet is the zero address");
         require(address(token_) != address(0), "Crowdsale: token is the zero address");
@@ -70,7 +70,7 @@ contract Crowdsale is Context, ReentrancyGuard {
      * of 2300, which is not enough to call buyTokens. Consider calling
      * buyTokens directly when purchasing tokens from a contract.
      */
-    receive () external payable {
+    receive() external payable {
         buyTokens(_msgSender());
     }
 

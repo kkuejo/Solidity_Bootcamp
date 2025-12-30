@@ -4,15 +4,18 @@ pragma solidity ^0.8.27;
 import "forge-std/Test.sol";
 import "../src/MyToken.sol";
 import "../src/MyTokenSale.sol";
+import "../src/KycContract.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract MyTokenSaleTest is Test {
     MyToken public token;
     MyTokenSale public tokenSale;
+    KycContract public kycContract;
 
     address public wallet;
     address public buyer1;
     address public buyer2;
+    address public owner;
 
     uint256 public constant INITIAL_SUPPLY = 1000000;
     uint256 public constant RATE = 1; // 1 wei = 1 token
@@ -28,6 +31,7 @@ contract MyTokenSaleTest is Test {
     receive() external payable {}
 
     function setUp() public {
+        owner = address(this);
         wallet = makeAddr("wallet"); // ETHを受け取るウォレット
         buyer1 = address(0x1);
         buyer2 = address(0x2);
@@ -35,11 +39,15 @@ contract MyTokenSaleTest is Test {
         // MyTokenをデプロイ
         token = new MyToken(INITIAL_SUPPLY);
 
+        // KycContractをデプロイ
+        kycContract = new KycContract();
+
         // MyTokenSaleをデプロイ
         tokenSale = new MyTokenSale(
             RATE,
             payable(wallet),
-            IERC20(address(token))
+            IERC20(address(token)),
+            kycContract
         );
 
         // 全トークンをTokenSaleコントラクトに転送
@@ -58,10 +66,13 @@ contract MyTokenSaleTest is Test {
         assertEq(tokenSaleBalance, totalSupply);
     }
 
-    // トークン購入が可能
+    // KYC承認されたアドレスはトークン購入が可能
     function testBuyTokens() public {
         uint256 weiAmount = 100;
         uint256 expectedTokens = weiAmount * RATE;
+
+        // buyer1をKYC承認
+        kycContract.setKycCompleted(buyer1);
 
         // buyer1の初期残高を確認
         uint256 balanceBefore = token.balanceOf(buyer1);
@@ -81,10 +92,13 @@ contract MyTokenSaleTest is Test {
         assertEq(balanceAfter, expectedTokens);
     }
 
-    // ETHを直接送信してトークンを購入
+    // KYC承認されたアドレスはETHを直接送信してトークンを購入可能
     function testBuyTokensViaReceive() public {
         uint256 weiAmount = 50;
         uint256 expectedTokens = weiAmount * RATE;
+
+        // buyer2をKYC承認
+        kycContract.setKycCompleted(buyer2);
 
         // buyer2に1 ETHを付与
         vm.deal(buyer2, 1 ether);
@@ -103,8 +117,21 @@ contract MyTokenSaleTest is Test {
         assertEq(balanceAfter, expectedTokens);
     }
 
+    // KYC未承認のアドレスはトークン購入不可
+    function testCannotBuyWithoutKyc() public {
+        uint256 weiAmount = 100;
+
+        vm.deal(buyer1, 1 ether);
+        vm.prank(buyer1);
+        vm.expectRevert("MyTokenSale: beneficiary not KYC approved");
+        tokenSale.buyTokens{value: weiAmount}(buyer1);
+    }
+
     // 0 weiでの購入は失敗
     function testCannotBuyWithZeroWei() public {
+        // buyer1をKYC承認
+        kycContract.setKycCompleted(buyer1);
+
         vm.prank(buyer1);
         vm.expectRevert("Crowdsale: weiAmount is 0");
         tokenSale.buyTokens{value: 0}(buyer1);
@@ -118,10 +145,14 @@ contract MyTokenSaleTest is Test {
         tokenSale.buyTokens{value: 100}(address(0));
     }
 
-    // 複数の購入者がトークンを購入可能
+    // 複数のKYC承認された購入者がトークンを購入可能
     function testMultipleBuyers() public {
         uint256 weiAmount1 = 100;
         uint256 weiAmount2 = 200;
+
+        // buyer1とbuyer2をKYC承認
+        kycContract.setKycCompleted(buyer1);
+        kycContract.setKycCompleted(buyer2);
 
         // buyer1が購入
         vm.deal(buyer1, 1 ether);
@@ -143,6 +174,10 @@ contract MyTokenSaleTest is Test {
         uint256 weiAmount1 = 100;
         uint256 weiAmount2 = 200;
 
+        // buyer1とbuyer2をKYC承認
+        kycContract.setKycCompleted(buyer1);
+        kycContract.setKycCompleted(buyer2);
+
         // 初期状態
         assertEq(tokenSale.weiRaised(), 0);
 
@@ -163,6 +198,9 @@ contract MyTokenSaleTest is Test {
     function testEthForwardedToWallet() public {
         uint256 weiAmount = 100;
 
+        // buyer1をKYC承認
+        kycContract.setKycCompleted(buyer1);
+
         // ウォレットの初期ETH残高を確認
         uint256 walletBalanceBefore = wallet.balance;
 
@@ -182,6 +220,9 @@ contract MyTokenSaleTest is Test {
         vm.assume(weiAmount > 0 && weiAmount <= 10000);
         vm.assume(weiAmount * RATE <= INITIAL_SUPPLY);
 
+        // buyer1をKYC承認
+        kycContract.setKycCompleted(buyer1);
+
         uint256 expectedTokens = weiAmount * RATE;
 
         vm.deal(buyer1, 1 ether);
@@ -189,5 +230,33 @@ contract MyTokenSaleTest is Test {
         tokenSale.buyTokens{value: weiAmount}(buyer1);
 
         assertEq(token.balanceOf(buyer1), expectedTokens);
+    }
+
+    // KYC承認を取り消すと購入不可になる
+    function testRevokeKyc() public {
+        uint256 weiAmount = 100;
+
+        // buyer1をKYC承認
+        kycContract.setKycCompleted(buyer1);
+
+        // buyer1が購入可能であることを確認
+        vm.deal(buyer1, 1 ether);
+        vm.prank(buyer1);
+        tokenSale.buyTokens{value: weiAmount}(buyer1);
+        assertEq(token.balanceOf(buyer1), weiAmount * RATE);
+
+        // KYCを取り消す
+        kycContract.setKycRevoked(buyer1);
+
+        // buyer1は購入不可になる
+        vm.deal(buyer1, 1 ether);
+        vm.prank(buyer1);
+        vm.expectRevert("MyTokenSale: beneficiary not KYC approved");
+        tokenSale.buyTokens{value: weiAmount}(buyer1);
+    }
+
+    // KYCコントラクトのアドレスを取得できる
+    function testGetKycContract() public view {
+        assertEq(address(tokenSale.kycContract()), address(kycContract));
     }
 }
